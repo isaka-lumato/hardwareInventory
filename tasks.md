@@ -249,7 +249,7 @@ Requirements:
 ---
 
 ### Task 9 — Print Invoice
-- [ ] Done
+- [x] Done
 
 **PROMPT:**
 ```

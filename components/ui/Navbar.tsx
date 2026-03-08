@@ -1,6 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { signOut } from '@/lib/auth'
 import type { Profile } from '@/lib/database.types'
@@ -29,9 +31,29 @@ export default function Navbar() {
     loadProfile()
   }, [])
 
+  const pathname = usePathname()
+
+  const cashierLinks = [
+    { href: '/cashier/new-order', label: 'New Order' },
+    { href: '/cashier/orders', label: 'My Orders' },
+  ]
+
   return (
     <nav className="flex h-14 items-center justify-between border-b bg-white px-4 shadow-sm">
-      <div className="font-bold text-gray-900">{storeName}</div>
+      <div className="flex items-center gap-6">
+        <div className="font-bold text-gray-900">{storeName}</div>
+        {profile?.role === 'cashier' && cashierLinks.map((link) => (
+          <Link
+            key={link.href}
+            href={link.href}
+            className={`text-sm font-medium ${
+              pathname === link.href ? 'text-blue-600' : 'text-gray-600 hover:text-gray-900'
+            }`}
+          >
+            {link.label}
+          </Link>
+        ))}
+      </div>
       <div className="flex items-center gap-4">
         {profile && (
           <span className="text-sm text-gray-600">
