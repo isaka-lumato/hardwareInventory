@@ -417,7 +417,7 @@ Requirements:
 ---
 
 ### Task 14 — Admin Dashboard (Reports)
-- [ ] Done
+- [x] Done
 
 **PROMPT:**
 ```
