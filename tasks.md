@@ -14,7 +14,7 @@
 ---
 
 ### Task 1 — Initialize Next.js Project
-- [ ] Done
+- [x] Done
 
 **PROMPT:**
 ```
