@@ -4,7 +4,7 @@
 -- ============================================
 -- Helper function: get current user's role
 -- ============================================
-CREATE OR REPLACE FUNCTION auth.user_role()
+CREATE OR REPLACE FUNCTION public.user_role()
 RETURNS TEXT AS $$
   SELECT role FROM public.profiles WHERE id = auth.uid();
 $$ LANGUAGE sql SECURITY DEFINER STABLE;
@@ -40,15 +40,15 @@ CREATE POLICY "Users can read own profile"
 
 CREATE POLICY "Admins can read all profiles"
   ON profiles FOR SELECT
-  USING (auth.user_role() = 'admin');
+  USING (public.user_role() = 'admin');
 
 CREATE POLICY "Admins can update all profiles"
   ON profiles FOR UPDATE
-  USING (auth.user_role() = 'admin');
+  USING (public.user_role() = 'admin');
 
 CREATE POLICY "Admins can insert profiles"
   ON profiles FOR INSERT
-  WITH CHECK (auth.user_role() = 'admin');
+  WITH CHECK (public.user_role() = 'admin');
 
 -- ============================================
 -- CATEGORIES RLS
@@ -62,15 +62,15 @@ CREATE POLICY "All authenticated users can read categories"
 
 CREATE POLICY "Admins can insert categories"
   ON categories FOR INSERT
-  WITH CHECK (auth.user_role() = 'admin');
+  WITH CHECK (public.user_role() = 'admin');
 
 CREATE POLICY "Admins can update categories"
   ON categories FOR UPDATE
-  USING (auth.user_role() = 'admin');
+  USING (public.user_role() = 'admin');
 
 CREATE POLICY "Admins can delete categories"
   ON categories FOR DELETE
-  USING (auth.user_role() = 'admin');
+  USING (public.user_role() = 'admin');
 
 -- ============================================
 -- PRODUCTS RLS
@@ -84,19 +84,19 @@ CREATE POLICY "All authenticated users can read active products"
 
 CREATE POLICY "Admins can read all products"
   ON products FOR SELECT
-  USING (auth.user_role() = 'admin');
+  USING (public.user_role() = 'admin');
 
 CREATE POLICY "Admins can insert products"
   ON products FOR INSERT
-  WITH CHECK (auth.user_role() = 'admin');
+  WITH CHECK (public.user_role() = 'admin');
 
 CREATE POLICY "Admins can update products"
   ON products FOR UPDATE
-  USING (auth.user_role() = 'admin');
+  USING (public.user_role() = 'admin');
 
 CREATE POLICY "Admins can delete products"
   ON products FOR DELETE
-  USING (auth.user_role() = 'admin');
+  USING (public.user_role() = 'admin');
 
 -- ============================================
 -- ORDERS RLS
@@ -113,15 +113,15 @@ CREATE POLICY "Cashiers can read own orders"
 
 CREATE POLICY "Storekeepers can read all orders"
   ON orders FOR SELECT
-  USING (auth.user_role() = 'storekeeper');
+  USING (public.user_role() = 'storekeeper');
 
 CREATE POLICY "Storekeepers can update order status"
   ON orders FOR UPDATE
-  USING (auth.user_role() = 'storekeeper');
+  USING (public.user_role() = 'storekeeper');
 
 CREATE POLICY "Admins can do everything with orders"
   ON orders FOR ALL
-  USING (auth.user_role() = 'admin');
+  USING (public.user_role() = 'admin');
 
 -- ============================================
 -- ORDER_ITEMS RLS
@@ -146,11 +146,11 @@ CREATE POLICY "Cashiers can read items for own orders"
 
 CREATE POLICY "Storekeepers can read all order items"
   ON order_items FOR SELECT
-  USING (auth.user_role() = 'storekeeper');
+  USING (public.user_role() = 'storekeeper');
 
 CREATE POLICY "Admins can do everything with order items"
   ON order_items FOR ALL
-  USING (auth.user_role() = 'admin');
+  USING (public.user_role() = 'admin');
 
 -- ============================================
 -- Enable Realtime for orders table

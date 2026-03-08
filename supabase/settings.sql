@@ -22,4 +22,4 @@ CREATE POLICY "All authenticated users can read settings"
 
 CREATE POLICY "Admins can update settings"
   ON settings FOR UPDATE
-  USING (auth.user_role() = 'admin');
+  USING (public.user_role() = 'admin');
