@@ -595,7 +595,7 @@ Create a store configuration system.
 ---
 
 ### Task 20 — Final QA & Deployment Prep
-- [ ] Done
+- [x] Done
 
 **PROMPT:**
 ```
