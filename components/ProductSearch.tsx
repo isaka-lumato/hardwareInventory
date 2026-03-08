@@ -76,11 +76,11 @@ export default function ProductSearch({ onSelect }: ProductSearchProps) {
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder="Search products by name or SKU..."
-        className="w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+        className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 shadow-sm placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
       />
 
       {showDropdown && (
-        <div className="absolute z-10 mt-1 w-full rounded-md border bg-white shadow-lg">
+        <div className="absolute z-10 mt-1 w-full rounded-xl bg-white shadow-lg ring-1 ring-gray-200">
           {loading && (
             <div className="p-3 text-center text-sm text-gray-500">Searching...</div>
           )}
@@ -93,7 +93,7 @@ export default function ProductSearch({ onSelect }: ProductSearchProps) {
             <button
               key={product.id}
               onClick={() => handleSelect(product)}
-              className="flex w-full items-center justify-between px-3 py-2 text-left hover:bg-blue-50"
+              className="flex w-full items-center justify-between px-4 py-3 text-left transition-colors hover:bg-blue-50 first:rounded-t-xl last:rounded-b-xl"
             >
               <div>
                 <div className="text-sm font-medium text-gray-900">{product.name}</div>
