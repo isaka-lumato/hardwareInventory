@@ -117,7 +117,7 @@ Requirements:
 ---
 
 ### Task 5 — Route Guards & Layout Shells
-- [ ] Done
+- [x] Done
 
 **PROMPT:**
 ```
