@@ -157,7 +157,7 @@ Create placeholder pages (just an h1 heading) for all routes listed in the PRD s
 ---
 
 ### Task 6 — Product Search Component
-- [ ] Done
+- [x] Done
 
 **PROMPT:**
 ```
