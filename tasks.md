@@ -454,7 +454,7 @@ Requirements:
 ---
 
 ### Task 15 — Admin Sales History
-- [ ] Done
+- [x] Done
 
 **PROMPT:**
 ```
