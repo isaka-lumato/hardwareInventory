@@ -187,7 +187,7 @@ Do not connect it to a cart yet — just build and export the component. Test it
 ---
 
 ### Task 7 — Order Cart
-- [ ] Done
+- [x] Done
 
 **PROMPT:**
 ```
