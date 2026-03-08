@@ -217,7 +217,7 @@ Requirements:
 ---
 
 ### Task 8 — Order Submission
-- [ ] Done
+- [x] Done
 
 **PROMPT:**
 ```
