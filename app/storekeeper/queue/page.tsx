@@ -1,12 +1,13 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import type { Order, OrderItem } from '@/lib/database.types'
 
 interface QueueOrder extends Order {
   items: OrderItem[]
   cashier_name: string
+  isNew?: boolean
 }
 
 function timeAgo(dateStr: string): string {
@@ -23,9 +24,36 @@ export default function QueuePage() {
   const [orders, setOrders] = useState<QueueOrder[]>([])
   const [loading, setLoading] = useState(true)
   const [fulfilling, setFulfilling] = useState<string | null>(null)
+  const [connected, setConnected] = useState(false)
   const supabase = createClient()
 
-  async function fetchOrders() {
+  const fetchOrderDetails = useCallback(async (orderId: string): Promise<QueueOrder | null> => {
+    try {
+      const { data: orderData } = await supabase
+        .from('orders')
+        .select('*')
+        .eq('id', orderId)
+        .single()
+
+      if (!orderData) return null
+
+      const [itemsResult, cashierResult] = await Promise.all([
+        supabase.from('order_items').select('*').eq('order_id', orderId),
+        supabase.from('profiles').select('name').eq('id', orderData.cashier_id).single(),
+      ])
+
+      return {
+        ...(orderData as Order),
+        items: (itemsResult.data as OrderItem[]) || [],
+        cashier_name: cashierResult.data?.name || 'Unknown',
+        isNew: true,
+      }
+    } catch {
+      return null
+    }
+  }, [supabase])
+
+  const fetchOrders = useCallback(async () => {
     try {
       const { data: ordersData, error: ordersError } = await supabase
         .from('orders')
@@ -39,7 +67,6 @@ export default function QueuePage() {
         return
       }
 
-      // Fetch items and cashier names for all orders
       const orderIds = ordersData.map((o) => o.id)
       const cashierIds = [...new Set(ordersData.map((o) => o.cashier_id))]
 
@@ -59,23 +86,57 @@ export default function QueuePage() {
         cashierMap[c.id] = c.name
       }
 
-      const mapped: QueueOrder[] = (ordersData as Order[]).map((o) => ({
+      setOrders((ordersData as Order[]).map((o) => ({
         ...o,
         items: itemsByOrder[o.id] || [],
         cashier_name: cashierMap[o.cashier_id] || 'Unknown',
-      }))
-
-      setOrders(mapped)
+      })))
     } catch (err) {
       console.error('Failed to fetch queue:', err)
     } finally {
       setLoading(false)
     }
-  }
+  }, [supabase])
 
   useEffect(() => {
     fetchOrders()
-  }, [])
+
+    const channel = supabase
+      .channel('orders-queue')
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'orders', filter: 'status=eq.pending' },
+        async (payload) => {
+          const newOrder = await fetchOrderDetails(payload.new.id as string)
+          if (newOrder) {
+            setOrders((prev) => [...prev, newOrder])
+            // Remove the "new" highlight after 2 seconds
+            setTimeout(() => {
+              setOrders((prev) =>
+                prev.map((o) => (o.id === newOrder.id ? { ...o, isNew: false } : o))
+              )
+            }, 2000)
+          }
+        }
+      )
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'orders' },
+        (payload) => {
+          const updated = payload.new as Order
+          if (updated.status === 'fulfilled' || updated.status === 'cancelled') {
+            setOrders((prev) => prev.filter((o) => o.id !== updated.id))
+          }
+        }
+      )
+      .subscribe((status) => {
+        setConnected(status === 'SUBSCRIBED')
+      })
+
+    return () => {
+      supabase.removeChannel(channel)
+    }
+  }, [fetchOrders, fetchOrderDetails, supabase])
 
   async function handleFulfill(orderId: string) {
     setFulfilling(orderId)
@@ -100,14 +161,29 @@ export default function QueuePage() {
 
   return (
     <div className="mx-auto max-w-3xl">
-      <h1 className="mb-4 text-2xl font-bold">Order Queue</h1>
+      <div className="mb-4 flex items-center justify-between">
+        <h1 className="text-2xl font-bold">Order Queue</h1>
+        <div className="flex items-center gap-2 text-sm text-gray-500">
+          <span
+            className={`inline-block h-2.5 w-2.5 rounded-full ${
+              connected ? 'bg-green-500' : 'bg-red-500'
+            }`}
+          />
+          {connected ? 'Live' : 'Disconnected'}
+        </div>
+      </div>
 
       {orders.length === 0 ? (
         <div className="py-12 text-center text-gray-500">No pending orders.</div>
       ) : (
         <div className="space-y-4">
           {orders.map((order) => (
-            <div key={order.id} className="rounded-lg border bg-white p-4 shadow-sm">
+            <div
+              key={order.id}
+              className={`rounded-lg border bg-white p-4 shadow-sm transition-all duration-500 ${
+                order.isNew ? 'border-green-400 ring-2 ring-green-200' : ''
+              }`}
+            >
               <div className="flex items-start justify-between">
                 <div>
                   <div className="text-lg font-bold">{order.order_number}</div>

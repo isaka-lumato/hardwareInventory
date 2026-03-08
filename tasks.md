@@ -319,7 +319,7 @@ Requirements:
 ---
 
 ### Task 11 — Storekeeper Order Queue (Static)
-- [ ] Done
+- [x] Done
 
 **PROMPT:**
 ```
