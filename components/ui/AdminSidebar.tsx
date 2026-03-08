@@ -9,6 +9,7 @@ const links = [
   { href: '/admin/inventory', label: 'Inventory' },
   { href: '/admin/sales', label: 'Sales' },
   { href: '/admin/users', label: 'Users' },
+  { href: '/admin/settings', label: 'Settings' },
 ]
 
 export default function AdminSidebar() {

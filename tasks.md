@@ -543,7 +543,7 @@ Specifically:
 ---
 
 ### Task 18 — Mobile Responsiveness
-- [ ] Done
+- [x] Done
 
 **PROMPT:**
 ```
