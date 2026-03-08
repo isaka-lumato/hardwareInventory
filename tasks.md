@@ -30,7 +30,7 @@ Create a new Next.js 14 project using the App Router. Use TypeScript. Install an
 ---
 
 ### Task 2 — Supabase Project & Database Schema
-- [ ] Done
+- [x] Done
 
 **PROMPT:**
 ```
