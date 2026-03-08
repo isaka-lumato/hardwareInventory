@@ -380,7 +380,7 @@ Requirements:
 ---
 
 ### Task 13 — Product Management (Admin)
-- [ ] Done
+- [x] Done
 
 **PROMPT:**
 ```
