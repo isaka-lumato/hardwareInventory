@@ -288,7 +288,7 @@ Requirements:
 ---
 
 ### Task 10 — Cashier Order History
-- [ ] Done
+- [x] Done
 
 **PROMPT:**
 ```
