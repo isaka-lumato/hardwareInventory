@@ -160,7 +160,7 @@ export default function QueuePage() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl">
+    <div className="mx-auto max-w-3xl px-2 sm:px-0">
       <div className="mb-4 flex items-center justify-between">
         <h1 className="text-2xl font-bold">Order Queue</h1>
         <div className="flex items-center gap-2 text-sm text-gray-500">
@@ -194,7 +194,7 @@ export default function QueuePage() {
                 <button
                   onClick={() => handleFulfill(order.id)}
                   disabled={fulfilling === order.id}
-                  className="rounded-md bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 disabled:opacity-50"
+                  className="rounded-md bg-green-600 px-4 py-3 text-sm font-medium text-white hover:bg-green-700 disabled:opacity-50 sm:py-2"
                 >
                   {fulfilling === order.id ? 'Fulfilling...' : 'Mark as Fulfilled'}
                 </button>

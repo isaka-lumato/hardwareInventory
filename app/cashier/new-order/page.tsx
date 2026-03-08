@@ -244,7 +244,7 @@ export default function NewOrderPage() {
             </table>
           </div>
 
-          <div className="mt-4 flex items-start justify-between gap-6">
+          <div className="mt-4 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
             <div className="flex-1 space-y-3">
               <div>
                 <label className="block text-sm font-medium text-gray-700">Payment Method</label>

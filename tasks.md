@@ -515,7 +515,7 @@ Requirements:
 ---
 
 ### Task 17 — Error Handling & Loading States
-- [ ] Done
+- [x] Done
 
 **PROMPT:**
 ```
