@@ -67,11 +67,12 @@ export default function SalesPage() {
         const cashierMap: Record<string, string> = {}
         for (const c of cashiers) cashierMap[c.id] = c.name
 
-        const mapped: SalesOrder[] = (data || []).map((row: Record<string, unknown>) => ({
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const mapped: SalesOrder[] = (data || []).map((row: any) => ({
           ...(row as Order),
-          cashier_name: cashierMap[(row as Order).cashier_id] || 'Unknown',
+          cashier_name: cashierMap[row.cashier_id] || 'Unknown',
           item_count: Array.isArray(row.order_items) && row.order_items.length > 0
-            ? (row.order_items[0] as { count: number }).count
+            ? row.order_items[0].count
             : 0,
         }))
 

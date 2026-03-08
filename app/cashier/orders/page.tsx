@@ -51,10 +51,11 @@ export default function CashierOrdersPage() {
           return
         }
 
-        const mapped = (data || []).map((row: Record<string, unknown>) => ({
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const mapped = (data || []).map((row: any) => ({
           ...(row as Order),
           item_count: Array.isArray(row.order_items) && row.order_items.length > 0
-            ? (row.order_items[0] as { count: number }).count
+            ? row.order_items[0].count
             : 0,
         }))
 

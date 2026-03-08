@@ -68,7 +68,7 @@ export default function QueuePage() {
       }
 
       const orderIds = ordersData.map((o) => o.id)
-      const cashierIds = [...new Set(ordersData.map((o) => o.cashier_id))]
+      const cashierIds = Array.from(new Set(ordersData.map((o) => o.cashier_id)))
 
       const [itemsResult, cashiersResult] = await Promise.all([
         supabase.from('order_items').select('*').in('order_id', orderIds),

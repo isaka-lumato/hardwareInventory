@@ -566,7 +566,7 @@ The admin screens do NOT need to be mobile-optimized for the MVP.
 ---
 
 ### Task 19 — Store Configuration
-- [ ] Done
+- [x] Done
 
 **PROMPT:**
 ```
