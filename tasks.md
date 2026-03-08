@@ -350,7 +350,7 @@ Requirements:
 ---
 
 ### Task 12 — Real-Time Order Queue
-- [ ] Done
+- [x] Done
 
 **PROMPT:**
 ```
