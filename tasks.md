@@ -87,7 +87,7 @@ Create the file /supabase/seed.sql that inserts:
 ---
 
 ### Task 4 — Auth Pages (Login)
-- [ ] Done
+- [x] Done
 
 **PROMPT:**
 ```
