@@ -57,7 +57,7 @@ Also create a SQL function: next_order_number() that returns a sequential order 
 ---
 
 ### Task 3 — Supabase Auth & Row Level Security
-- [ ] Done
+- [x] Done
 
 **PROMPT:**
 ```
