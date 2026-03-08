@@ -111,7 +111,10 @@ export default function NewOrderPage() {
   )
 
   async function handleSubmit() {
-    if (cart.length === 0) return
+    if (cart.length === 0) {
+      setError('Please add at least one item to the cart.')
+      return
+    }
     setSubmitting(true)
     setError('')
 

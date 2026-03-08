@@ -480,7 +480,7 @@ Requirements:
 ---
 
 ### Task 16 — Admin User Management
-- [ ] Done
+- [x] Done
 
 **PROMPT:**
 ```

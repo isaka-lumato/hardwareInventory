@@ -83,6 +83,10 @@ export default function ProductsPage() {
 
   async function handleSave() {
     if (!form.name.trim()) { setError('Name is required'); return }
+    const sp = parseFloat(form.selling_price) || 0
+    const cp = parseFloat(form.cost_price) || 0
+    if (sp <= 0) { setError('Selling price must be greater than 0'); return }
+    if (sp < cp && !confirm('Selling price is less than cost price. Continue anyway?')) return
     setSaving(true)
     setError('')
 
