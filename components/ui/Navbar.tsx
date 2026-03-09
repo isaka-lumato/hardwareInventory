@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { signOut } from '@/lib/auth'
 import type { Profile } from '@/lib/database.types'
+import { LogOut, User } from 'lucide-react'
 
 export default function Navbar() {
   const [profile, setProfile] = useState<Profile | null>(null)
@@ -38,42 +40,56 @@ export default function Navbar() {
   ]
 
   return (
-    <nav className="flex h-16 items-center justify-between border-b border-gray-200 bg-white px-6 shadow-sm">
+    <nav className="flex h-16 items-center justify-between border-b border-zinc-800 bg-zinc-950/80 backdrop-blur-md px-6 shadow-sm sticky top-0 z-50">
       <div className="flex items-center gap-8">
-        <Link href="/" className="text-lg font-bold text-gray-900">{storeName}</Link>
+        <Link href="/" className="flex items-center gap-3">
+          <div className="relative h-8 w-8 rounded-lg overflow-hidden border border-zinc-700">
+            <Image src="/hms-logo.png" alt="HMS Logo" fill className="object-cover" />
+          </div>
+          <span className="text-xl font-black text-zinc-100 tracking-tight">{storeName}</span>
+        </Link>
+
         {profile?.role === 'cashier' && cashierLinks.map((link) => (
           <Link
             key={link.href}
             href={link.href}
-            className={`text-sm font-medium transition-colors ${
-              pathname === link.href
-                ? 'text-blue-600 border-b-2 border-blue-600 pb-0.5'
-                : 'text-gray-600 hover:text-gray-900'
-            }`}
+            className={`text-sm font-semibold transition-all duration-200 relative ${pathname === link.href
+                ? 'text-amber-500'
+                : 'text-zinc-400 hover:text-zinc-100'
+              }`}
           >
             {link.label}
+            {pathname === link.href && (
+              <span className="absolute -bottom-[21px] left-0 w-full h-[2px] bg-amber-500 rounded-t-full shadow-[0_-2px_8px_rgba(245,158,11,0.5)]" />
+            )}
           </Link>
         ))}
       </div>
-      <div className="flex items-center gap-4">
+
+      <div className="flex items-center gap-6">
         {profile && (
-          <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-100 text-sm font-semibold text-blue-700">
-              {profile.name.charAt(0).toUpperCase()}
+          <div className="flex items-center gap-3">
+            <div className="hidden sm:flex flex-col items-end">
+              <span className="text-sm font-bold text-zinc-100">{profile.name}</span>
+              <span className="text-xs font-medium text-amber-500/80 capitalize tracking-wide">{profile.role}</span>
             </div>
-            <div className="hidden sm:block">
-              <div className="text-sm font-medium text-gray-900">{profile.name}</div>
-              <div className="text-xs text-gray-500 capitalize">{profile.role}</div>
+            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-zinc-900 border border-zinc-700 text-zinc-300 shadow-inner">
+              <User className="w-4 h-4" />
             </div>
           </div>
         )}
+
+        <div className="w-px h-6 bg-zinc-800"></div>
+
         <button
           onClick={signOut}
-          className="rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 transition-colors"
+          className="flex items-center gap-2 rounded-lg bg-zinc-900 px-3 py-1.5 text-sm font-semibold text-zinc-300 border border-zinc-800 hover:bg-zinc-800 hover:text-white transition-all duration-200"
         >
-          Sign Out
+          <LogOut className="w-4 h-4" />
+          <span>Sign Out</span>
         </button>
       </div>
     </nav>
   )
 }
+

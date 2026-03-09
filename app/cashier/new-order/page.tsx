@@ -181,38 +181,45 @@ export default function NewOrderPage() {
   }
 
   return (
-    <div className="mx-auto max-w-4xl">
-      <h1 className="mb-6 text-2xl font-bold text-gray-900">New Order</h1>
+    <div className="mx-auto max-w-6xl px-4 py-8">
+      <div className="mb-8 flex items-center justify-between">
+        <h1 className="text-3xl font-black text-white tracking-tight">New Order</h1>
+      </div>
 
-      <ProductSearch onSelect={handleSelect} />
+      <div className="mb-8 relative z-40">
+        <ProductSearch onSelect={handleSelect} />
+      </div>
 
       {error && (
-        <div className="mt-4 rounded-lg bg-red-50 p-3 text-sm font-medium text-red-700 ring-1 ring-red-200">{error}</div>
+        <div className="mb-8 rounded-xl bg-red-500/10 p-4 text-sm font-medium text-red-500 border border-red-500/20 flex items-center gap-3">
+          <svg className="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+          {error}
+        </div>
       )}
 
       {cart.length > 0 && (
-        <div className="mt-6">
-          <div className="overflow-x-auto rounded-xl bg-white shadow-sm ring-1 ring-gray-200">
+        <div className="space-y-6">
+          <div className="overflow-x-auto rounded-2xl bg-zinc-900/50 shadow-xl border border-zinc-800">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-200 bg-gray-50">
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">Product</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">Unit</th>
-                  <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">Qty</th>
-                  <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-gray-500">Unit Price</th>
-                  <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-gray-500">Line Total</th>
-                  <th className="px-4 py-3"></th>
+                <tr className="border-b border-zinc-800 bg-zinc-900">
+                  <th className="px-6 py-4 text-left font-bold text-zinc-400 uppercase tracking-wider text-xs">Product</th>
+                  <th className="px-6 py-4 text-left font-bold text-zinc-400 uppercase tracking-wider text-xs hidden sm:table-cell">Unit</th>
+                  <th className="px-6 py-4 text-center font-bold text-zinc-400 uppercase tracking-wider text-xs">Qty</th>
+                  <th className="px-6 py-4 text-right font-bold text-zinc-400 uppercase tracking-wider text-xs">Unit Price</th>
+                  <th className="px-6 py-4 text-right font-bold text-zinc-400 uppercase tracking-wider text-xs">Total</th>
+                  <th className="px-6 py-4"></th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-zinc-800/50">
                 {cart.map((item) => (
-                  <tr key={item.product_id} className="hover:bg-gray-50">
-                    <td className="px-4 py-3">
-                      <div className="font-medium text-gray-900">{item.product_name}</div>
-                      {item.sku && <div className="text-xs text-gray-500">{item.sku}</div>}
+                  <tr key={item.product_id} className="hover:bg-zinc-800/30 transition-colors group">
+                    <td className="px-6 py-4">
+                      <div className="font-bold text-zinc-100 group-hover:text-amber-500 transition-colors">{item.product_name}</div>
+                      {item.sku && <div className="text-xs text-zinc-500 font-mono mt-1 uppercase tracking-wider">SKU: {item.sku}</div>}
                     </td>
-                    <td className="px-4 py-3 text-gray-600">{item.unit}</td>
-                    <td className="px-4 py-3 text-center">
+                    <td className="px-6 py-4 font-medium text-zinc-500 hidden sm:table-cell">{item.unit}</td>
+                    <td className="px-6 py-4 text-center w-32">
                       <input
                         type="number"
                         min="0"
@@ -221,21 +228,26 @@ export default function NewOrderPage() {
                         onChange={(e) =>
                           updateQuantity(item.product_id, parseFloat(e.target.value) || 0)
                         }
-                        className="w-20 rounded-lg border border-gray-300 bg-white px-2 py-1.5 text-center text-gray-900 shadow-sm"
+                        className="w-20 rounded-xl border border-zinc-700 bg-zinc-950 px-3 py-2 text-center text-white font-bold tracking-wider shadow-inner focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20 transition-all"
                       />
                     </td>
-                    <td className="px-4 py-3 text-right text-gray-700">
+                    <td className="px-6 py-4 text-right text-zinc-400 font-medium whitespace-nowrap">
                       {formatCurrency(item.unit_selling_price)}
                     </td>
-                    <td className="px-4 py-3 text-right font-semibold text-gray-900">
-                      {formatCurrency(Math.round(item.quantity * item.unit_selling_price))}
+                    <td className="px-6 py-4 text-right whitespace-nowrap">
+                      <div className="font-black text-emerald-400 bg-emerald-400/10 inline-block px-3 py-1 rounded-lg">
+                        {formatCurrency(Math.round(item.quantity * item.unit_selling_price))}
+                      </div>
                     </td>
-                    <td className="px-4 py-3 text-center">
+                    <td className="px-6 py-4 text-center">
                       <button
                         onClick={() => removeItem(item.product_id)}
-                        className="text-sm font-medium text-red-600 hover:text-red-800 transition-colors"
+                        className="p-2 text-zinc-600 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-colors"
+                        title="Remove Item"
                       >
-                        Remove
+                        <svg className="w-5 h-5 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
                       </button>
                     </td>
                   </tr>
@@ -244,53 +256,79 @@ export default function NewOrderPage() {
             </table>
           </div>
 
-          <div className="mt-6 flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
-            <div className="flex-1 space-y-4">
-              <div>
-                <label className="block text-sm font-semibold text-gray-900">Payment Method</label>
-                <select
-                  value={paymentMethod}
-                  onChange={(e) => setPaymentMethod(e.target.value as PaymentMethod)}
-                  className="mt-2 rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                >
-                  <option value="cash">Cash</option>
-                  <option value="mobile_money">Mobile Money</option>
-                  <option value="credit">Credit</option>
-                </select>
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+            <div className="flex-1 space-y-6">
+              <div className="rounded-2xl bg-zinc-900/50 p-6 border border-zinc-800">
+                <label className="block text-sm font-bold text-zinc-300 uppercase tracking-wider mb-3">Payment Method</label>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  {(['cash', 'mobile_money', 'credit'] as const).map(method => (
+                    <button
+                      key={method}
+                      onClick={() => setPaymentMethod(method as PaymentMethod)}
+                      className={`px-4 py-3 rounded-xl border transition-all duration-200 font-bold ${paymentMethod === method
+                          ? 'border-amber-500 bg-amber-500/10 text-amber-500 ring-1 ring-amber-500/50 shadow-[0_0_15px_rgba(245,158,11,0.15)]'
+                          : 'border-zinc-700 bg-zinc-950 text-zinc-400 hover:text-zinc-200 hover:border-zinc-600'
+                        }`}
+                    >
+                      {method === 'cash' ? 'Cash' : method === 'mobile_money' ? 'Mobile Money' : 'Store Credit'}
+                    </button>
+                  ))}
+                </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-semibold text-gray-900">Notes (optional)</label>
+              <div className="rounded-2xl bg-zinc-900/50 p-6 border border-zinc-800">
+                <label className="block text-sm font-bold text-zinc-300 uppercase tracking-wider mb-3">Order Notes</label>
                 <textarea
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   rows={2}
-                  className="mt-2 w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 shadow-sm placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                  placeholder="Any special instructions..."
+                  className="w-full rounded-xl border border-zinc-700 bg-zinc-950 px-4 py-3 text-sm text-zinc-100 shadow-sm placeholder:text-zinc-600 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20 transition-all resize-none"
+                  placeholder="Optional delivery instructions or customer details..."
                 />
               </div>
             </div>
 
-            <div className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-gray-200">
-              <div className="text-sm text-gray-500">Subtotal</div>
-              <div className="text-lg font-bold text-gray-900">{formatCurrency(subtotal)}</div>
-              <div className="mt-2 border-t pt-2 text-sm text-gray-500">Total</div>
-              <div className="text-2xl font-bold text-blue-600">{formatCurrency(subtotal)}</div>
+            <div className="lg:w-[380px] rounded-2xl bg-zinc-900/80 p-8 shadow-2xl border border-zinc-800 backdrop-blur-xl relative overflow-hidden shrink-0">
+              <div className="absolute -top-6 -right-6 w-32 h-32 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
 
-              <div className="mt-4 flex gap-2">
-                <button
-                  onClick={clearCart}
-                  className="rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 transition-colors"
-                >
-                  Clear
-                </button>
-                <button
-                  onClick={handleSubmit}
-                  disabled={submitting || cart.length === 0}
-                  className="rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50 transition-colors"
-                >
-                  {submitting ? 'Submitting...' : 'Submit Order'}
-                </button>
+              <div className="space-y-4 relative z-10">
+                <div className="flex justify-between items-end">
+                  <div className="text-sm font-bold text-zinc-500 uppercase tracking-widest">Subtotal</div>
+                  <div className="text-xl font-bold text-zinc-300">{formatCurrency(subtotal)}</div>
+                </div>
+
+                <div className="h-px w-full bg-gradient-to-r from-transparent via-zinc-700 to-transparent my-6"></div>
+
+                <div className="flex justify-between items-end">
+                  <div className="text-sm font-bold text-zinc-400 uppercase tracking-widest mb-1.5">Total Pay</div>
+                  <div className="text-5xl font-black text-amber-500 tracking-tight">{formatCurrency(subtotal)}</div>
+                </div>
+
+                <div className="mt-8 flex flex-col gap-3 pt-6">
+                  <button
+                    onClick={handleSubmit}
+                    disabled={submitting || cart.length === 0}
+                    className="w-full relative overflow-hidden rounded-xl bg-amber-500 px-6 py-4 text-base font-black text-amber-950 shadow-[0_0_20px_rgba(245,158,11,0.3)] hover:bg-amber-400 hover:shadow-[0_0_30px_rgba(245,158,11,0.5)] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none transition-all duration-300 group"
+                  >
+                    <div className="absolute inset-0 w-full h-full bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out pointer-events-none" />
+                    <span className="relative z-10 flex items-center justify-center gap-2">
+                      {submitting ? (
+                        <>
+                          <span className="h-5 w-5 animate-spin rounded-full border-2 border-amber-950 border-t-transparent"></span>
+                          Processing...
+                        </>
+                      ) : (
+                        'Submit Print & Queue'
+                      )}
+                    </span>
+                  </button>
+                  <button
+                    onClick={clearCart}
+                    className="w-full rounded-xl border border-zinc-700 bg-zinc-950 px-4 py-3 text-sm font-bold text-zinc-400 hover:bg-zinc-800 hover:text-white transition-all duration-200"
+                  >
+                    Clear Cart
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -298,11 +336,14 @@ export default function NewOrderPage() {
       )}
 
       {cart.length === 0 && mounted && (
-        <div className="mt-12 text-center">
-          <div className="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100">
-            <span className="text-2xl">🛒</span>
+        <div className="mt-16 flex flex-col items-center justify-center py-24 rounded-3xl border border-dashed border-zinc-700 bg-zinc-900/20 px-4 text-center">
+          <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-zinc-900 shadow-inner border border-zinc-800">
+            <svg className="w-10 h-10 text-zinc-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
           </div>
-          <p className="text-sm font-medium text-gray-500">Search for products above to start building an order.</p>
+          <h3 className="text-2xl font-bold text-zinc-200 mb-3 tracking-tight">Cart is empty</h3>
+          <p className="text-base font-medium text-zinc-500 max-w-sm leading-relaxed">Use the search bar above to look up products by name or SKU and add them to this order.</p>
         </div>
       )}
     </div>

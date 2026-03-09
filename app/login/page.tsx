@@ -2,10 +2,12 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 import { createClient } from '@/lib/supabase/client'
 import { getHomeRoute } from '@/lib/auth'
 import { formatError } from '@/lib/errors'
 import type { UserRole } from '@/lib/database.types'
+import { Wrench } from 'lucide-react'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -87,34 +89,47 @@ export default function LoginPage() {
 
   if (checkingSession) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-50">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-600 border-t-transparent"></div>
+      <div className="flex min-h-screen items-center justify-center bg-zinc-950">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-amber-500 border-t-transparent"></div>
       </div>
     )
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
-      <div className="w-full max-w-sm">
-        <div className="mb-8 text-center">
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-600 text-2xl font-bold text-white">
-            H
+    <div className="flex min-h-screen items-center justify-center bg-zinc-950 px-4 relative overflow-hidden">
+      {/* Decorative background elements */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none opacity-20">
+        <div className="absolute -top-[20%] -right-[10%] w-[70%] h-[70%] rounded-full bg-amber-500/10 blur-[120px]" />
+        <div className="absolute top-[60%] -left-[10%] w-[50%] h-[50%] rounded-full bg-zinc-500/10 blur-[100px]" />
+      </div>
+
+      <div className="w-full max-w-md relative z-10">
+        <div className="mb-8 text-center flex flex-col items-center">
+          <div className="mb-6 relative flex h-24 w-24 items-center justify-center rounded-2xl bg-zinc-900 border border-zinc-800 shadow-2xl overflow-hidden group">
+            <Image 
+              src="/hms-logo.png" 
+              alt="HMS Logo" 
+              width={96} 
+              height={96} 
+              className="object-cover group-hover:scale-105 transition-transform duration-500"
+            />
           </div>
-          <h1 className="text-2xl font-bold text-gray-900">{storeName}</h1>
-          <p className="mt-1 text-sm text-gray-500">Sign in to manage your store</p>
+          <h1 className="text-3xl font-extrabold text-white tracking-tight">{storeName}</h1>
+          <p className="mt-2 text-sm text-zinc-400 font-medium">Point of Sale & Management</p>
         </div>
 
-        <div className="rounded-xl bg-white p-8 shadow-lg ring-1 ring-gray-200">
-          <form onSubmit={handleLogin} className="space-y-5">
+        <div className="rounded-2xl bg-zinc-900/80 backdrop-blur-xl p-8 shadow-2xl border border-zinc-800/50">
+          <form onSubmit={handleLogin} className="space-y-6">
             {error && (
-              <div className="rounded-lg bg-red-50 p-3 text-sm font-medium text-red-700 ring-1 ring-red-200">
-                {error}
+              <div className="rounded-xl bg-red-500/10 p-4 text-sm font-medium text-red-500 border border-red-500/20 flex items-start gap-3">
+                <Wrench className="w-5 h-5 shrink-0 mt-0.5" />
+                <p>{error}</p>
               </div>
             )}
 
-            <div>
-              <label htmlFor="email" className="block text-sm font-semibold text-gray-900">
-                Email
+            <div className="space-y-1.5">
+              <label htmlFor="email" className="block text-sm font-medium text-zinc-300">
+                Email Address
               </label>
               <input
                 id="email"
@@ -122,13 +137,13 @@ export default function LoginPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="mt-2 block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 shadow-sm placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                className="block w-full rounded-xl border border-zinc-700 bg-zinc-950/50 px-4 py-3.5 text-sm text-white shadow-sm placeholder:text-zinc-600 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20 transition-all duration-200"
                 placeholder="you@example.com"
               />
             </div>
 
-            <div>
-              <label htmlFor="password" className="block text-sm font-semibold text-gray-900">
+            <div className="space-y-1.5">
+              <label htmlFor="password" className="block text-sm font-medium text-zinc-300">
                 Password
               </label>
               <input
@@ -137,7 +152,7 @@ export default function LoginPage() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="mt-2 block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 shadow-sm placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                className="block w-full rounded-xl border border-zinc-700 bg-zinc-950/50 px-4 py-3.5 text-sm text-white shadow-sm placeholder:text-zinc-600 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20 transition-all duration-200"
                 placeholder="Enter your password"
               />
             </div>
@@ -145,16 +160,19 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-colors"
+              className="w-full relative group overflow-hidden rounded-xl bg-amber-500 px-4 py-3.5 text-sm font-bold text-zinc-950 shadow-lg hover:bg-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 focus:ring-offset-zinc-900 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200"
             >
-              {loading ? (
-                <span className="flex items-center justify-center gap-2">
-                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></span>
-                  Signing in...
-                </span>
-              ) : (
-                'Sign In'
-              )}
+              <div className="absolute inset-0 w-full h-full bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
+              <span className="relative flex items-center justify-center gap-2">
+                {loading ? (
+                  <>
+                    <span className="h-4 w-4 animate-spin rounded-full border-2 border-zinc-950 border-t-transparent"></span>
+                    Authenticating...
+                  </>
+                ) : (
+                  'Sign In'
+                )}
+              </span>
             </button>
           </form>
         </div>
@@ -162,3 +180,4 @@ export default function LoginPage() {
     </div>
   )
 }
+

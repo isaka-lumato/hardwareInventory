@@ -144,17 +144,18 @@ export default function DashboardPage() {
   ]
 
   return (
-    <div>
-      <div className="mb-4 flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Dashboard</h1>
-        <div className="flex gap-1">
+    <div className="max-w-6xl mx-auto space-y-6">
+      <div className="flex items-center justify-between">
+        <h1 className="text-3xl font-black text-white tracking-tight">Dashboard</h1>
+        <div className="flex gap-2 p-1 bg-zinc-900/50 rounded-lg border border-zinc-800 backdrop-blur-sm">
           {(['today', 'week', 'month'] as DateFilter[]).map((f) => (
             <button
               key={f}
               onClick={() => setDateFilter(f)}
-              className={`rounded-md px-3 py-1 text-sm ${
-                dateFilter === f ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
+              className={`rounded-md px-4 py-1.5 text-sm font-semibold transition-all duration-200 ${dateFilter === f
+                  ? 'bg-amber-500 text-zinc-950 shadow-sm'
+                  : 'text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800'
+                }`}
             >
               {f === 'today' ? 'Today' : f === 'week' ? 'This Week' : 'This Month'}
             </button>
@@ -163,81 +164,93 @@ export default function DashboardPage() {
       </div>
 
       {loading ? (
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[...Array(6)].map((_, i) => (
-            <div key={i} className="h-20 animate-pulse rounded-lg bg-gray-100" />
+            <div key={i} className="h-28 animate-pulse rounded-2xl bg-zinc-900/50 border border-zinc-800" />
           ))}
         </div>
       ) : (
         <>
-          <div className="mb-6 grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {cards.map((card) => (
-              <div key={card.label} className="rounded-lg border bg-white p-4">
-                <div className="text-sm text-gray-500">{card.label}</div>
-                <div className="mt-1 text-xl font-bold">{card.value}</div>
+              <div key={card.label} className="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6 flex flex-col justify-center relative overflow-hidden group">
+                <div className="absolute -right-6 -top-6 w-24 h-24 bg-zinc-800/30 rounded-full blur-2xl group-hover:bg-amber-500/10 transition-colors duration-500" />
+                <div className="text-sm font-bold tracking-widest text-zinc-500 uppercase">{card.label}</div>
+                <div className="mt-2 text-3xl font-black text-white">{card.value}</div>
               </div>
             ))}
           </div>
 
-          <div className="mb-6 rounded-lg border bg-white p-4">
-            <h2 className="mb-3 font-semibold">Daily Revenue (Last 30 Days)</h2>
-            <ResponsiveContainer width="100%" height={250}>
-              <BarChart data={dailyRevenue}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="date" fontSize={10} />
-                <YAxis fontSize={10} tickFormatter={(v) => formatCurrency(v)} />
-                <Tooltip formatter={(value) => formatCurrency(Number(value))} />
-                <Bar dataKey="revenue" fill="#3b82f6" />
-              </BarChart>
-            </ResponsiveContainer>
+          <div className="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6">
+            <h2 className="mb-6 text-lg font-bold text-white">Daily Revenue (Last 30 Days)</h2>
+            <div className="h-[300px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={dailyRevenue} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#27272a" vertical={false} />
+                  <XAxis dataKey="date" fontSize={11} stroke="#71717a" tickLine={false} axisLine={false} />
+                  <YAxis fontSize={11} stroke="#71717a" tickLine={false} axisLine={false} tickFormatter={(v) => formatCurrency(v)} />
+                  <Tooltip
+                    cursor={{ fill: '#27272a' }}
+                    contentStyle={{ backgroundColor: '#18181b', border: '1px solid #27272a', borderRadius: '12px', color: '#fff' }}
+                    itemStyle={{ color: '#f59e0b', fontWeight: 'bold' }}
+                    formatter={(value) => formatCurrency(Number(value))}
+                  />
+                  <Bar dataKey="revenue" fill="#f59e0b" radius={[4, 4, 0, 0]} maxBarSize={40} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div className="rounded-lg border bg-white p-4">
-              <h2 className="mb-3 font-semibold">Top 10 Products by Quantity</h2>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6">
+              <h2 className="mb-6 text-lg font-bold text-white">Top Products by Quantity</h2>
               {topByQty.length === 0 ? (
-                <p className="text-sm text-gray-500">No data</p>
+                <p className="text-sm text-zinc-500 text-center py-8">No data available for this period.</p>
               ) : (
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b">
-                      <th className="py-1 text-left">Product</th>
-                      <th className="py-1 text-right">Qty Sold</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {topByQty.map((p, i) => (
-                      <tr key={i} className="border-b last:border-0">
-                        <td className="py-1">{p.product_name}</td>
-                        <td className="py-1 text-right">{p.total_qty}</td>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b border-zinc-800">
+                        <th className="pb-3 text-left font-semibold text-zinc-400">Product</th>
+                        <th className="pb-3 text-right font-semibold text-zinc-400">Qty Sold</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody className="divide-y divide-zinc-800/50">
+                      {topByQty.map((p, i) => (
+                        <tr key={i} className="group hover:bg-zinc-800/30 transition-colors">
+                          <td className="py-3 font-medium text-zinc-200">{p.product_name}</td>
+                          <td className="py-3 text-right font-bold text-amber-500">{p.total_qty}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               )}
             </div>
 
-            <div className="rounded-lg border bg-white p-4">
-              <h2 className="mb-3 font-semibold">Top 10 Products by Revenue</h2>
+            <div className="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6">
+              <h2 className="mb-6 text-lg font-bold text-white">Top Products by Revenue</h2>
               {topByRevenue.length === 0 ? (
-                <p className="text-sm text-gray-500">No data</p>
+                <p className="text-sm text-zinc-500 text-center py-8">No data available for this period.</p>
               ) : (
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b">
-                      <th className="py-1 text-left">Product</th>
-                      <th className="py-1 text-right">Revenue</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {topByRevenue.map((p, i) => (
-                      <tr key={i} className="border-b last:border-0">
-                        <td className="py-1">{p.product_name}</td>
-                        <td className="py-1 text-right">{formatCurrency(p.total_revenue)}</td>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b border-zinc-800">
+                        <th className="pb-3 text-left font-semibold text-zinc-400">Product</th>
+                        <th className="pb-3 text-right font-semibold text-zinc-400">Revenue</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody className="divide-y divide-zinc-800/50">
+                      {topByRevenue.map((p, i) => (
+                        <tr key={i} className="group hover:bg-zinc-800/30 transition-colors">
+                          <td className="py-3 font-medium text-zinc-200">{p.product_name}</td>
+                          <td className="py-3 text-right font-bold text-emerald-400">{formatCurrency(p.total_revenue)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               )}
             </div>
           </div>

@@ -2,13 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  color: #111827;
-  background: #f9fafb;
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-/* Force light mode regardless of system preference */
-html {
-  color-scheme: light;
+@layer base {
+  body {
+    @apply bg-zinc-950 text-zinc-100 antialiased selection:bg-amber-500/30 selection:text-amber-200;
+  }
+  
+  html {
+    color-scheme: dark;
+  }
 }
